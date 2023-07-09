@@ -1,0 +1,28 @@
+---
+title: "Resolución Práctica Programada 1 RStudio II"
+author: "Johanna Salazar Ramírez"
+date: "2023-07-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+library(readxl)
+library(tidyr)
+library(janitor) 
+library(lubridate) 
+```
+
+# `Práctica programada 1`
+
+## *Preparación y limpieza de datos*
+
+**a.** Cree un archivo Rmarkdown para resolver esta práctica programada. En el chunk de setup cargue las librerías que considere necesarias para resolver la práctica. Los datos para trabajar puede cargarlos con la función read_csv2 de readr directamente de la siguiente dirección: "<https://raw.githubusercontent>.com/isa229/programacion_analisis_datos_ii/main/netflix_info.csv". (1pto)
+
+```{r}
+datos_netflix <- "https://raw.githubusercontent.com/isa229/programacion_analisis_datos_ii/main/netflix_info.csv"
+datos <- read_csv2(datos_netflix)
+```
+
