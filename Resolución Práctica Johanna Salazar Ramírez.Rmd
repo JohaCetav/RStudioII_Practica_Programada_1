@@ -182,5 +182,3 @@ Total <- nrow(tvshow_2020)
 ```
 
 R/ En Marzo del 2020 se lanzaron 44 TV Shows.
-
-
