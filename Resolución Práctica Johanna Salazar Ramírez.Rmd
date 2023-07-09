@@ -114,3 +114,72 @@ datos_netflix_limpio <- datos_netflix_limpio |>
   mutate(Mes = month(Fecha))
 ```
 
+## *Preguntas*
+
+Una vez que haya terminado la limpieza anterior, responda las siguientes preguntas:
+
+**i.** Cuántas películas y shows de TV hay por país? (4pts)
+
+```{r}
+conta_peliculas <- datos_netflix_limpio |> 
+  filter(Tipo %in% c("Movie", "TV Show")) |> 
+  count(Pais, Tipo) |> 
+  as.data.frame()
+```
+
+```{r}
+View(conta_peliculas) #Al correr esta función se visualiza la cuenta de peliculas y TV Shows por país.
+```
+
+**j.** Cuáles son los 10 directores con mayor cantidad de películas (sin contar shows de TV) en Netflix? Ordénelos por orden descendente. (4pts)
+
+```{r}
+top_10_directores_peliculas <- datos_netflix_limpio |>
+  filter(Tipo=="Movie") |>
+  count(Director, Tipo) |>
+  arrange(desc(n)) |> 
+  head(10)
+```
+
+R/ Corriendo el siguiente chunk se visualiza la lista de los 10 directores con mayor cantidad de películas:
+
+```{r}
+View(conta_peliculas) 
+```
+
+**k.** Cuáles son los 10 directores con mayor cantidad de shows de TV (sin contar películas) en Netflix? Ordénelos por orden descendente. (4pts)
+
+```{r}
+top_10_directores_tvshow <- datos_netflix_limpio |>
+  filter(Tipo=="TV Show") |>
+  count(Director, Tipo) |>
+  arrange(desc(n)) |> 
+  head(10)
+```
+
+R/ Corriendo el siguiente chunk se visualiza la lista de los 10 directores con mayor cantidad de TvShows:
+
+```{r}
+View(top_10_directores_tvshow) 
+```
+
+**l.** Obtenga la lista de películas y shows de TV que se añadieron en marzo del año 2020. Cuántos fueron? (4pts) \`
+
+```{r}
+peliculas_2020 <- datos_netflix_limpio |>
+  filter(Tipo =="Movie", Año == 2020, Mes == 3)
+
+Total <- nrow(peliculas_2020)
+```
+
+R/ En Marzo del 2020 se lanzaron 93 Películas.
+
+```{r}
+tvshow_2020 <- datos_netflix_limpio |>
+  filter(Tipo =="TV Show", Año == 2020, Mes == 3)
+
+Total <- nrow(tvshow_2020)
+```
+
+R/ En Marzo del 2020 se lanzaron 44 TV Shows.
+
