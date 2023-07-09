@@ -26,3 +26,91 @@ datos_netflix <- "https://raw.githubusercontent.com/isa229/programacion_analisis
 datos <- read_csv2(datos_netflix)
 ```
 
+**b.** Ajuste los nombres de las columnas para que estén en español. (2pts)
+
+```{r}
+nombre_columnas_español <- c("ID", "Tipo", "Titulo", "Director", "Pais", "Fecha", "Año_Lanzamiento", "Calificacion", "Duracion", "Categoria")
+colnames(datos) <- nombre_columnas_español
+```
+
+**c.** Elimine filas duplicadas. (2pts)
+
+```{r}
+datos_duplicados <- get_dupes(datos) #Con éste comando se detectan los datos duplicados
+```
+
+```{r}
+datos_sin_filas_duplicadas <- distinct(datos) #Con peste comando eliminamos los datos duplicados de la datos
+```
+
+**d.** Elimine filas y columnas vacías. (2pts)
+
+```{r}
+datos_sin_vacios <- datos_sin_filas_duplicadas |> 
+  remove_empty(which = c("rows", "cols"))
+```
+
+**e.** Elimine la variable correspondiente al año de lanzamiento (release_year.) (2pts)
+
+```{r}
+datos_netflix_limpio <- datos_sin_vacios |> 
+  select(-Año_Lanzamiento) |> 
+  distinct()
+```
+
+**f.** Haga una inspección de las variables type y country para determinar si hay observaciones mal escritas o escritas de diferentes maneras. Si es ahí, haga la limpieza para poder homogenizar esos datos. (10pts)
+
+```{r}
+tabla_tipo <- as.data.frame(table(datos_netflix_limpio$Tipo))
+tabla_tipo #Con éste comando revisamos en una tabla el conteo por tipo y se crea el dataframe.
+```
+
+```{r}
+tabla_pais <- as.data.frame(table(datos$Pais))
+tabla_pais #Con éste comando revisamos en una tabla el conteo por pais y se crea el dataframe.
+```
+
+```{r}
+datos_netflix_limpio <- datos_netflix_limpio |>
+  mutate(across(c(Tipo), function(x) ifelse(x == "movie", "Movie", x))) |>
+  mutate(across(c(Tipo), function(x) ifelse(x == "tv show", "TV Show", x))) |>
+  mutate(across(c(Tipo), function(x) ifelse(x == "Movi", "Movie", x))) |> 
+  mutate(across(c(Tipo), function(x) ifelse(x == "TV SHOW", "TV Show", x)))
+```
+
+```{r}
+unique(datos_netflix_limpio$Tipo) #Con esta función verificamos si se aplicaron los cambios en las variables.
+```
+
+```{r}
+datos_netflix_limpio <- datos_netflix_limpio|>
+  mutate(Pais = ifelse(Pais == "united states", "United States", Pais)) |> 
+  mutate(Pais = ifelse(Pais == "india", "India", Pais)) |> 
+  mutate(pais = ifelse(Pais == "pakistan", "Pakistan", Pais)) |> 
+  mutate(pais = ifelse(Pais == "canada", "Canada", Pais))
+```
+
+```{r}
+unique(datos_netflix_limpio$Pais) #Veo esta funcion es como un preview de los datos en las variables
+```
+
+**g.** Para todas las columnas de tipo carácter, en donde haya NA, coloque "Sin información". (4pts)
+
+```{r}
+datos_netflix_limpio <- datos_netflix_limpio|> 
+  mutate(across(where(is.character), ~replace(., is.na(.), "Sin información")))
+```
+
+**h.** Añada a su conjunto de datos una nueva columna llamada anyo que indique el año en que el show o película fue añadido a Netflix. Añada también una columna llamada mes que indique el mes en que el show o película fue añadido a Netflix. (6pts)
+
+```{r}
+datos_netflix_limpio <- datos_netflix_limpio |> 
+  mutate(Fecha = mdy(Fecha))
+
+datos_netflix_limpio <- datos_netflix_limpio |>                              
+  mutate(Año = year(Fecha))
+
+datos_netflix_limpio <- datos_netflix_limpio |>                              
+  mutate(Mes = month(Fecha))
+```
+
